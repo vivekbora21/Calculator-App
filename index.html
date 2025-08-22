@@ -16,12 +16,12 @@
 
     .calculator {  
       font-family: verdana;
-      background: #c1bdbdff;
+      background: linear-gradient(to bottom, #373534ff, #a96832ff);
       padding: 35px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(37, 34, 34, 0.2);
+      box-shadow: 0 4px 12px rgba(37, 34, 34, 0.53);
       text-align: center;
-      color: #4d9f98ff;
+      color: #a5c4c1ff;
     }
 
     #result {
@@ -39,12 +39,12 @@
       width: 50px;
       height: 50px;
       margin: 5px;
-      font-size: 1.1em;
+      font-size: 1.2em;
       border: none;
       border-radius: 8px;
-      background: #e0e0e0;
       cursor: pointer;
       transition: background 0.2s;
+      background: linear-gradient(to bottom, #d1dbe0ff, #dfee59ff);
     }
 
     .buttons .equal {
@@ -63,6 +63,7 @@
       text-align: left;
       background: #fff;
       padding: 10px;
+      width: 235px;
       border-radius: 8px;
       max-height: 150px;
       overflow-y: auto;
@@ -79,6 +80,7 @@
     .history ul {
       list-style-type: none;
       padding: 0;
+      font-size: 0.9em;
     }
 
     .history li {
@@ -110,7 +112,7 @@
 
       <button onclick="appendValue('.')">.</button>
       <button onclick="appendValue('0')">0</button>
-      <button onclick="deleteChar()">c</button>
+      <button onclick="deleteChar()">C</button>
       <button onclick="appendValue('+')">+</button><br>
 
       <button onclick="clearResult()" class="clear">clear</button>
