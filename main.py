@@ -11,18 +11,18 @@ def get_home():
     return html_content
 
 # Calculator API endpoint
-@app.get("/add")
+@app.get("/add") # performs addition
 def add(a: float, b: float):
     return {"result": a + b}
 
-@app.get("/sub")
+@app.get("/sub") # performs subtraction
 def sub(a: float, b: float):
     return {"result": a - b}
 
-@app.get("/mul")
+@app.get("/mul") # performs multiplication
 def mul(a: float, b: float):
     return {"result": a * b}
 
-@app.get("/div")
+@app.get("/div") # performs division
 def div(a: float, b: float):
     return {"result": "Cannot divide by zero!" if b == 0 else a / b}
