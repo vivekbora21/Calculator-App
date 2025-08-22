@@ -25,13 +25,14 @@
     }
 
     #result {
-      width: 220px;
+      width: 235px;
       height: 40px;
-      font-size: 1.2em;
+      font-size: 1.3em; 
       text-align: right;
       margin-bottom: 15px;
+      border-radius: 8px;
       padding: 5px;
-      background: #fefefe;
+      background: #ffffffff;
     }
 
     .buttons button {
@@ -55,6 +56,33 @@
       width: 180px;
       background: #f44336;
       color: white;
+    }
+
+    .history {
+      margin-top: 20px;
+      text-align: left;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .history h5 {
+      margin: 5px 0;
+      text-align: center;
+      color: #4d9f98ff;
+    }
+
+    .history ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .history li {
+      padding: 3px 0;
     }
   </style>
 </head>
@@ -88,26 +116,60 @@
       <button onclick="clearResult()" class="clear">clear</button>
       <button onclick="calculate()" class="equal">=</button>
     </div>
+
+    <!-- Last 5 operations history -->
+    <div class="history">
+      <h5>Last 5 Operations</h5>
+      <ul id="historyList"></ul>
+    </div>
   </div>
 
   <script>
-    // to append add values in the display
+    let reset = false;
+    let history = [];
+
     function appendValue(value) {
-      document.getElementById("result").value += value;
+      if (reset){
+        document.getElementById("result").value = value;
+        reset = false;
+      }
+      else{
+        document.getElementById("result").value += value;
+      }
     }
 
-    // to clear the display
     function clearResult() {
       document.getElementById("result").value = "";
+      reset = false;
     }
 
-    // to remove the value
     function deleteChar() {
       let current = document.getElementById("result").value;
       document.getElementById("result").value = current.slice(0, -1);
+      reset = false;
     }
 
-    // check for the operator and based on that send the request to backend for the operation
+    function addToHistory(operation, result) {
+      if (isNaN(result)) {
+        return; // skip adding invalid results
+      }
+      history.unshift(`${operation} = ${result}`);
+      if (history.length > 5) {
+        history.pop();
+      }
+      displayHistory();
+    }
+
+    function displayHistory() {
+      const historyList = document.getElementById("historyList");
+      historyList.innerHTML = "";
+      history.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = item;
+        historyList.appendChild(li);
+      });
+    }
+
     function calculate() {
       let input = document.getElementById("result").value;
 
@@ -117,6 +179,8 @@
           .then(response => response.json())
           .then(data => {
             document.getElementById("result").value = data.result;
+            addToHistory(input, data.result);
+            reset = true;
           });
       }
       else if (input.includes("-")) {
@@ -125,6 +189,8 @@
           .then(response => response.json())
           .then(data => {
             document.getElementById("result").value = data.result;
+            addToHistory(input, data.result);
+            reset = true;
           });
       }
       else if (input.includes("*")) {
@@ -133,6 +199,8 @@
           .then(response => response.json())
           .then(data => {
             document.getElementById("result").value = data.result;
+            addToHistory(input, data.result);
+            reset = true;
           });
       }
       else if (input.includes("/")) {
@@ -141,6 +209,8 @@
           .then(response => response.json())
           .then(data => {
             document.getElementById("result").value = data.result;
+            addToHistory(input, data.result);
+            reset = true;
           });
       }
       else {
