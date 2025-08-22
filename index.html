@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fef0f0ff;
+      height: 100vh;
+    }
+
+    .calculator {  
+      font-family: verdana;
+      background: #c1bdbdff;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(37, 34, 34, 0.2);
+      text-align: center;
+      color: #4d9f98ff;
+    }
+
+    #result {
+      width: 220px;
+      height: 40px;
+      font-size: 1.2em;
+      text-align: right;
+      margin-bottom: 15px;
+      padding: 5px;
+      background: #fefefe;
+    }
+
+    .buttons button {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 8px;
+      background: #e0e0e0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .buttons .equal {
+      background: #4caf50;
+      color: white;
+    }
+
+    .buttons .clear {
+      width: 180px;
+      background: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <h1>CALCULATOR</h1>
+    <input type="text" id="result" disabled>
+
+    <div class="buttons">
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button onclick="appendValue('/')">/</button><br>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button onclick="appendValue('*')">*</button><br>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button onclick="appendValue('-')">-</button><br>
+
+      <button onclick="appendValue('.')">.</button>
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="deleteChar()">c</button>
+      <button onclick="appendValue('+')">+</button><br>
+
+      <button onclick="clearResult()" class="clear">clear</button>
+      <button onclick="calculate()" class="equal">=</button>
+    </div>
+  </div>
+
+  <script>
+    function appendValue(value) {
+      document.getElementById("result").value += value;
+    }
+
+    function clearResult() {
+      document.getElementById("result").value = "";
+    }
+
+    function deleteChar() {
+      let current = document.getElementById("result").value;
+      document.getElementById("result").value = current.slice(0, -1);
+    }
+
+    function calculate() {
+      let input = document.getElementById("result").value;
+
+      if (input.includes("+")) {
+        let [a, b] = input.split("+");
+        fetch(`http://127.0.0.1:8000/add?a=${a}&b=${b}`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("result").value = data.result;
+          });
+      }
+      else if (input.includes("-")) {
+        let [a, b] = input.split("-");
+        fetch(`http://127.0.0.1:8000/sub?a=${a}&b=${b}`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("result").value = data.result;
+          });
+      }
+      else if (input.includes("*")) {
+        let [a, b] = input.split("*");
+        fetch(`http://127.0.0.1:8000/mul?a=${a}&b=${b}`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("result").value = data.result;
+          });
+      }
+      else if (input.includes("/")) {
+        let [a, b] = input.split("/");
+        fetch(`http://127.0.0.1:8000/div?a=${a}&b=${b}`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("result").value = data.result;
+          });
+      }
+      else {
+        alert("Invalid Expression!");
+      }
+    }
+  </script>
+</body>
+</html>
