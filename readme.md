@@ -25,12 +25,3 @@ Technology Stack
     Communication: RESTful API endpoints
 
     Styling: Custom CSS with modern design elements
-
-Project Structure
-text
-
-calculator-app/
-│
-├── main.py              # FastAPI server and endpoint definitions
-├── index.html           # Frontend interface with embedded CSS/JS
-└── README.md            # Project documentation (this file)
