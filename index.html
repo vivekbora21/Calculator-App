@@ -16,7 +16,7 @@
 
     .calculator {  
       font-family: verdana;
-      background: linear-gradient(to bottom, #373534ff, #a96832ff);
+      background: linear-gradient(to bottom, #534a46ff, #dfb089ff);
       padding: 35px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(37, 34, 34, 0.53);
@@ -43,17 +43,17 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s;
       background: linear-gradient(to bottom, #d1dbe0ff, #dfee59ff);
     }
 
     .buttons .equal {
+      width: 70px;
       background: #4caf50;
       color: white;
     }
 
     .buttons .clear {
-      width: 180px;
+      width: 170px;
       background: #f44336;
       color: white;
     }
@@ -63,7 +63,7 @@
       text-align: left;
       background: #fff;
       padding: 10px;
-      width: 235px;
+      width: 230px;
       border-radius: 8px;
       max-height: 150px;
       overflow-y: auto;
@@ -115,7 +115,7 @@
       <button onclick="deleteChar()">C</button>
       <button onclick="appendValue('+')">+</button><br>
 
-      <button onclick="clearResult()" class="clear">clear</button>
+      <button onclick="clearResult()" class="clear">Clear</button>
       <button onclick="calculate()" class="equal">=</button>
     </div>
 
@@ -131,12 +131,42 @@
     let history = [];
 
     function appendValue(value) {
-      if (reset){
-        document.getElementById("result").value = value;
+      let resultBox = document.getElementById("result");
+
+      if (reset) {
+        if (!isNaN(value) || value === ".") {
+          resultBox.value = value;
+        } else if (["+", "-", "*", "/"].includes(value)) {
+          resultBox.value += value;
+        }
         reset = false;
-      }
-      else{
-        document.getElementById("result").value += value;
+      } else {
+        if (value === "-" && resultBox.value === "") {
+          resultBox.value = "-";
+        }
+        else if (["+", "*", "/"].includes(value) && resultBox.value === "") {
+          return;
+        }
+        else if (value === "0") {
+          // Prevent multiple leading zeros
+          if (resultBox.value === "0") {
+            return; 
+          }
+          // If last char is an operator, allow zero but not "00"
+          let lastChar = resultBox.value.slice(-1);
+          if (lastChar === "0" && resultBox.value.length === 1) {
+            return;
+          }
+          resultBox.value += "0";
+        }
+        else {
+          // If first char is 0 and we type a digit, replace it
+          if (resultBox.value === "0" && !isNaN(value) && value !== ".") {
+            resultBox.value = value;
+          } else {
+            resultBox.value += value;
+          }
+        }
       }
     }
 
@@ -219,6 +249,25 @@
         alert("Invalid Expression!");
       }
     }
+
+    document.addEventListener("keydown", function(event) {
+    const key = event.key;
+    if (!isNaN(key) || ["+", "-", "*", "/"].includes(key)) {
+      appendValue(key);
+    }
+
+    else if (key === "Enter") {
+      calculate();
+    }
+
+    else if (key === "Backspace") {
+      deleteChar();
+    }
+
+    else if (key === "Escape") {
+      clearResult();
+    }
+  });
   </script>
 </body>
 </html>

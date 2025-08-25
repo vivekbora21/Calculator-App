@@ -25,4 +25,4 @@ def mul(a: float, b: float):
 
 @app.get("/div") # performs division
 def div(a: float, b: float):
-    return {"result": "Cannot divide by zero!" if b == 0 else a / b}
+    return {"result": "Infinity" if b == 0 else a / b}
